@@ -1,0 +1,170 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="max-w-3xl mx-auto mt-12 px-6">
+
+<div class="bg-white dark:bg-gray-800 rounded-2xl shadow p-10 border border-gray-200 dark:border-gray-700">
+
+<h2 class="text-3xl font-semibold text-gray-800 dark:text-gray-100 mb-8 text-center">
+Add Expense
+</h2>
+
+<form method="POST">
+{% csrf_token %}
+
+<!-- Amount -->
+<div class="mb-6">
+<label class="block mb-2 text-gray-700 dark:text-gray-300 font-medium">
+Amount
+</label>
+{{ form.amount }}
+</div>
+
+<!-- Description -->
+<div class="mb-2">
+<label class="block mb-2 text-gray-700 dark:text-gray-300 font-medium">
+Description
+</label>
+{{ form.description }}
+</div>
+
+<!-- AI Suggestion -->
+<div id="ai_suggestion_box" class="mt-3 hidden">
+
+<span id="ai_text"
+class="bg-indigo-100 text-indigo-700 dark:bg-indigo-500/20 dark:text-indigo-300 px-3 py-1 rounded-lg text-sm font-medium">
+</span>
+
+<button
+id="apply_ai_category"
+type="button"
+class="ml-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs px-3 py-1 rounded">
+Apply
+</button>
+
+</div>
+
+<!-- Category -->
+<div class="mt-6 mb-6">
+<label class="block mb-2 text-gray-700 dark:text-gray-300 font-medium">
+Category
+</label>
+{{ form.category }}
+</div>
+
+<!-- Date -->
+<div class="mb-6">
+<label class="block mb-2 text-gray-700 dark:text-gray-300 font-medium">
+Date
+</label>
+{{ form.date }}
+</div>
+
+<!-- Payment -->
+<div class="mb-8">
+<label class="block mb-2 text-gray-700 dark:text-gray-300 font-medium">
+Payment Method
+</label>
+{{ form.payment_method }}
+</div>
+
+<button
+type="submit"
+class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-medium transition">
+Add Expense
+</button>
+
+</form>
+
+</div>
+
+</div>
+
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function(){
+
+const descriptionInput = document.querySelector("#id_description");
+const categoryDropdown = document.querySelector("#id_category");
+
+const aiBox = document.getElementById("ai_suggestion_box");
+const aiText = document.getElementById("ai_text");
+const applyBtn = document.getElementById("apply_ai_category");
+
+let debounceTimer = null;
+let predictedCategory = null;
+
+descriptionInput.addEventListener("input", function(){
+
+clearTimeout(debounceTimer);
+
+const text = this.value.trim();
+
+if(text.length === 0){
+
+aiBox.classList.add("hidden");
+categoryDropdown.selectedIndex = 0;
+predictedCategory = null;
+
+return;
+}
+
+if(text.length < 2){
+aiBox.classList.add("hidden");
+return;
+}
+
+debounceTimer = setTimeout(function(){
+
+fetch("/predict-category/?text=" + encodeURIComponent(text))
+
+.then(res => res.json())
+
+.then(data => {
+
+if(!data.category){
+
+aiBox.classList.add("hidden");
+categoryDropdown.selectedIndex = 0;
+return;
+
+}
+
+predictedCategory = data.category;
+
+aiText.innerHTML = "🤖 AI Suggestion: <b>" + predictedCategory + "</b>";
+
+aiBox.classList.remove("hidden");
+
+})
+
+.catch(err => console.error(err));
+
+}, 400);
+
+});
+
+applyBtn.addEventListener("click", function(){
+
+if(!predictedCategory) return;
+
+for(let option of categoryDropdown.options){
+
+if(option.text.trim().toLowerCase() === predictedCategory.toLowerCase()){
+
+categoryDropdown.value = option.value;
+break;
+
+}
+
+}
+
+});
+
+});
+
+</script>
+
+{% endblock %}

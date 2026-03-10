@@ -1,0 +1,162 @@
+{% load static %}
+<!DOCTYPE html>
+<html class="h-full">
+<head>
+    <title>Expense Tracker</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="{% static 'images/favicon.png' %}">
+    <script>
+
+    const savedTheme = localStorage.getItem("theme");
+
+    const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    if (savedTheme === "dark" || (!savedTheme && systemPrefersDark)) {
+        document.documentElement.classList.add("dark");
+    } else {
+        document.documentElement.classList.remove("dark");
+    }
+</script>
+
+    <script>
+        if(localStorage.getItem("theme") === "dark" || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add("dark");
+        }
+    </script>
+
+    <style>
+        @keyframes fadeIn {
+            from {opacity:0; transform:translateY(10px);}
+            to {opacity:1; transform:translateY(0);}
+        }
+        .animate-fade-in { animation:fadeIn 0.6s ease; }
+
+        /* Smooth transition for the Smart Navbar */
+        nav {
+            transition: transform 0.3s ease-in-out;
+        }
+        .nav-hidden {
+            transform: translateY(-100%);
+        }
+
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        /* Hide scrollbar for IE, Edge and Firefox */
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { darkMode: 'class' }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body class="min-h-screen flex flex-col bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-gray-100">
+
+    <div id="page-loader" class="fixed inset-0 bg-gray-900 flex items-center justify-center z-[100]">
+        <div class="flex flex-col items-center">
+            <div class="animate-spin rounded-full h-12 w-12 border-4 border-blue-500 border-t-transparent"></div>
+            <p class="text-gray-300 mt-4 text-sm font-medium">Loading Dashboard...</p>
+        </div>
+    </div>
+
+    <nav id="main-nav" class="bg-gray-800 text-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex justify-between items-center px-4 pt-4 pb-2 md:pb-4">
+                <div class="text-lg font-bold truncate tracking-tight">
+                    Expense Tracker
+                </div>
+                
+                <div class="flex items-center space-x-3">
+                    <button id="theme-toggle" class="p-2 bg-gray-700 hover:bg-gray-600 rounded-full text-sm leading-none transition-colors">
+                        🌙
+                    </button>
+                    {% if user.is_authenticated %}
+                    <form method="post" action="{% url 'logout' %}" class="inline">
+                        {% csrf_token %}
+                        <button class="bg-red-500 hover:bg-red-600 px-3 py-1.5 rounded text-xs font-bold uppercase tracking-wider transition-colors">
+                            Logout
+                        </button>
+                    </form>
+                    {% endif %}
+                </div>
+            </div>
+
+            {% if user.is_authenticated %}
+            <div class="flex overflow-x-auto no-scrollbar border-t border-gray-700 px-4 py-2 space-x-6 text-sm font-medium">
+                <a href="{% url 'dashboard' %}" class="whitespace-nowrap hover:text-yellow-300 py-1 transition-colors">Dashboard</a>
+                <a href="{% url 'category_list' %}" class="whitespace-nowrap hover:text-yellow-300 py-1 transition-colors">Categories</a>
+                <a href="{% url 'add_expense' %}" class="whitespace-nowrap hover:text-yellow-300 py-1 transition-colors">Add Expense</a>
+                <a href="{% url 'expense_list' %}" class="whitespace-nowrap hover:text-yellow-300 py-1 transition-colors">Expenses</a>
+            </div>
+            {% endif %}
+        </div>
+    </nav>
+
+    <main class="flex-grow max-w-7xl mx-auto w-full px-4 py-6 md:px-6">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="bg-gray-800 text-gray-400 text-center py-8 mt-auto border-t border-gray-700">
+        <p class="text-sm">© 2026 Expense Tracker • Built by Saksham</p>
+        <div class="mt-3 text-xs space-x-6">
+            <a href="#" class="hover:text-white transition-colors">Privacy</a>
+            <a href="#" class="hover:text-white transition-colors">Terms</a>
+            <a href="#" class="hover:text-white transition-colors">Support</a>
+        </div>
+    </footer>
+
+    <script>
+        // 1. Theme Toggle Logic
+        document.addEventListener("DOMContentLoaded", function() {
+            const toggleBtn = document.getElementById("theme-toggle");
+            const html = document.documentElement;
+
+            const updateIcon = () => {
+                toggleBtn.textContent = html.classList.contains("dark") ? "☀️" : "🌙";
+            };
+            updateIcon();
+
+            toggleBtn.addEventListener("click", function() {
+                html.classList.toggle("dark");
+                localStorage.setItem("theme", html.classList.contains("dark") ? "dark" : "light");
+                updateIcon();
+            });
+        });
+
+        // 2. Smart Navbar Hide/Show Logic
+        let lastScrollY = window.scrollY;
+        const nav = document.getElementById("main-nav");
+        const tolerance = 5; 
+
+        window.addEventListener("scroll", () => {
+            const currentScrollY = window.scrollY;
+            const diff = Math.abs(currentScrollY - lastScrollY);
+
+            if (diff < tolerance) return; 
+
+            if (currentScrollY > lastScrollY && currentScrollY > 100) {
+                // Scrolling Down - Hide Nav
+                nav.classList.add("nav-hidden");
+            } else {
+                // Scrolling Up - Show Nav
+                nav.classList.remove("nav-hidden");
+            }
+            lastScrollY = currentScrollY;
+        });
+
+        // 3. Page Loader Fade Out
+        window.addEventListener("load", function () {
+            const loader = document.getElementById("page-loader");
+            loader.style.opacity = "0";
+            loader.style.transition = "opacity 0.4s ease";
+            setTimeout(() => { loader.style.display = "none"; }, 400);
+        });
+    </script>
+</body>
+</html>

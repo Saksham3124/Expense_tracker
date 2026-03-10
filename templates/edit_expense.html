@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="max-w-xl mx-auto bg-white dark:bg-gray-800 shadow-lg rounded-xl p-8">
+
+<h2 class="text-2xl font-semibold mb-6 text-center text-gray-800 dark:text-gray-100">
+Edit Expense
+</h2>
+
+<form method="POST" class="space-y-5">
+
+{% csrf_token %}
+
+<div class="space-y-4 text-gray-700 dark:text-gray-300">
+{{ form.as_p }}
+</div>
+
+<button
+type="submit"
+class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg transition duration-200 font-medium"
+>
+Update Expense
+</button>
+
+</form>
+
+</div>
+
+{% endblock %}
