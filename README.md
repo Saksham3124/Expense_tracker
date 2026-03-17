@@ -213,21 +213,6 @@ gunicorn expense_tracker.wsgi
 
 ---
 
-# 📸 Screenshots
-
-Dashboard
-
-* Spending analytics
-* AI insights
-* Expense predictions
-
-Charts
-
-* Category distribution
-* Monthly trends
-
----
-
 # 📌 Future Improvements
 
 * Expense receipt scanning
