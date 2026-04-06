@@ -53,6 +53,35 @@ It helps users manage expenses, track spending patterns, set budgets, and get in
 * Page loader
 
 ---
+## 📸 Screenshots
+
+### 🏠 Dashboard
+<p align="center">
+  <img src="screenshots/dashboard.png" width="800">
+</p>
+
+### ➕ Add Expense
+<p align="center">
+  <img src="screenshots/add_expense.png" width="800">
+</p>
+
+### 📂 Categories
+<p align="center">
+  <img src="screenshots/categories.png" width="800">
+</p>
+
+### 📋 Expense List
+<p align="center">
+  <img src="screenshots/list.png" width="800">
+</p>
+
+### 🔐 Login Page
+<p align="center">
+  <img src="screenshots/login.png" width="500">
+</p>
+
+---
+
 
 # 🛠 Tech Stack
 
