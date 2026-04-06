@@ -62,7 +62,7 @@ It helps users manage expenses, track spending patterns, set budgets, and get in
 
 ### ➕ Add Expense
 <p align="center">
-  <img src="screenshots/add_expense.png" width="800">
+  <img src="screenshots/adding expenses.png" width="800">
 </p>
 
 ### 📂 Categories
