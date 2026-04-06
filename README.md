@@ -77,7 +77,7 @@ It helps users manage expenses, track spending patterns, set budgets, and get in
 
 ### 🔐 Login Page
 <p align="center">
-  <img src="screenshots/login.png" width="500">
+  <img src="screenshots/login page.jpeg" width="500">
 </p>
 
 ---
