@@ -55,6 +55,10 @@ It helps users manage expenses, track spending patterns, set budgets, and get in
 ---
 ## 📸 Screenshots
 
+### 🔐 Login Page
+<p align="center">
+  <img src="screenshots/login page.jpeg" width="500">
+</p>
 ### 🏠 Dashboard
 <p align="center">
   <img src="screenshots/dashboard.png" width="800">
@@ -75,10 +79,6 @@ It helps users manage expenses, track spending patterns, set budgets, and get in
   <img src="screenshots/list.png" width="800">
 </p>
 
-### 🔐 Login Page
-<p align="center">
-  <img src="screenshots/login page.jpeg" width="500">
-</p>
 
 ---
 
