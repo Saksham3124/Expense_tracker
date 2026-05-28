@@ -256,6 +256,7 @@ gunicorn config.wsgi
 B.Tech Student — BIT Mesra
 
 [![GitHub](https://img.shields.io/badge/GitHub-Saksham3124-181717?style=flat&logo=github)](https://github.com/Saksham3124)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Kumar_Saksham-0A66C2?style=flat&logo=linkedin)](https://linkedin.com/in/kumarsaksham)
 
 ---
 
